@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/igorrendulic/mcrypt-sdk-go/proto";
+
+package proto;
+
+// DbData for synchronizing replicas and key/value exchange between nodes
+message Key {
+    bytes id = 1;
+}
+
+enum KeyType {
+	Ed25519 = 0;
+}
+
+message PublicKey {
+	KeyType Type = 1;
+	bytes Data = 2;
+}
+
+message PrivateKey {
+	KeyType Type = 1;
+	bytes Data = 2;
+}
