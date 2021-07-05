@@ -4,7 +4,7 @@ option go_package = "github.com/igorrendulic/mcrypt-sdk-go/proto";
 
 package proto;
 
-// DbData for synchronizing replicas and key/value exchange between nodes
+// Mailio ID representation
 message Key {
     bytes id = 1;
 }

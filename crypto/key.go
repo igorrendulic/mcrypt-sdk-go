@@ -6,8 +6,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/gogo/protobuf/proto"
 	pb "github.com/igorrendulic/mcrypt-sdk-go/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
