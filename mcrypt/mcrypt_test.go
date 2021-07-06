@@ -128,3 +128,20 @@ func TestEd25519SignFailMessage(t *testing.T) {
 	}
 	assert.Equal(t, false, isValid)
 }
+
+func TestAws256Encryption(t *testing.T) {
+	key, err := crypto.New32ByteKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	msg := "this is plain message"
+	encrypted, err := crypto.Aes256Encrypt(key, []byte(msg))
+	if err != nil {
+		t.Fatal(err)
+	}
+	decrypted, err := crypto.Aes256Decrypt(key, encrypted)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, msg, string(decrypted))
+}

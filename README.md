@@ -9,13 +9,9 @@ Encrypt and decrypt with single key pair
     mcrypt := NewMCrypt(testPath)
 	baseText := "this is test..."
 	encrypted, err := mcrypt.EncPrivKey.Encrypt(mcrypt.EncPubKey, []byte(baseText))
-	if err != nil {
-		t.Fatal(err)
-	}
+	
 	origText, err := mcrypt.EncPrivKey.Decrypt(mcrypt.EncPubKey, encrypted)
-	if err != nil {
-		t.Fatal(err)
-	}
+	
 ```
 
 Encrypt/Descrypt for recipient with specific public key (PK exchange required prior)
@@ -26,12 +22,18 @@ Encrypt/Descrypt for recipient with specific public key (PK exchange required pr
 
 	testMsg := "this is a test..."
 	encTest, err := mcrypt1.EncPrivKey.Encrypt(mcrypt2.EncPubKey, []byte(testMsg))
-	if err != nil {
-		t.Fatal(err)
-	}
+
 	decrypted, err := mcrypt2.EncPrivKey.Decrypt(mcrypt1.EncPubKey, encTest)
-	if err != nil {
-		t.Fatal(err)
-	}
 ```
 
+AES256 
+
+Keys must be 32 bytes
+
+```go
+    
+    key, err := crypto.New32ByteKey()
+	msg := "this is plain message"
+	encrypted, err := crypto.Aes256Encrypt(key, []byte(msg))
+	decrypted, err := crypto.Aes256Decrypt(key, encrypted)
+```
