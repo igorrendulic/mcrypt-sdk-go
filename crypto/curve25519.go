@@ -2,7 +2,6 @@ package crypto
 
 import (
 	crypto_rand "crypto/rand"
-	"fmt"
 	"io"
 	"regexp"
 
@@ -39,7 +38,7 @@ func (k *Curve25519PrivateKey) Decrypt(senderPublicKey PubCKey, encryptedPayload
 	copy(nonce[:], encryptedPayload[:24])
 	plain, ok := box.Open(nil, encryptedPayload[24:], &nonce, senderPublicKey.Raw(), k.Key)
 	if !ok {
-		return nil, fmt.Errorf("Fatal error decrypting")
+		return nil, ErrDecryptionFailed
 	}
 	return plain, nil
 }
