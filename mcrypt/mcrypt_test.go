@@ -1,6 +1,7 @@
 package mcrypt
 
 import (
+	"encoding/base64"
 	"os"
 	"testing"
 
@@ -144,4 +145,35 @@ func TestAws256Encryption(t *testing.T) {
 		t.Fatal(err)
 	}
 	assert.Equal(t, msg, string(decrypted))
+}
+
+func TestHandshakeVerify(t *testing.T) {
+	handshakeContract := "3f7b0d967ad268f28a4ae3e67e9c32aa3d671a207d264021917498ec75c52438b8a0a9f59f9635bf8eb4569e4a539e24b60ea085ed21b73f6c1d0f50934dc150"
+
+	defer cleanupfiles("test-domain.json")
+	GenerateRandomKeys("test.io", "test-domain.json")
+
+	mcrypt := NewMCrypt("test-domain.json")
+	privKey, err := mcrypt.SignPrivKey.Bytes()
+	if err != nil {
+		t.Fatal(err)
+	}
+	pubKey, err := mcrypt.SignPubKey.Raw()
+	if err != nil {
+		t.Fatal(err)
+	}
+	privateKey := base64.StdEncoding.EncodeToString(privKey)
+	publicKey := base64.StdEncoding.EncodeToString(pubKey)
+
+	signature, err := mcrypt.CreateHandshake(privateKey, handshakeContract)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	isValid, err := mcrypt.VerifyMailioHandshake(publicKey, *signature, handshakeContract)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, true, isValid)
+
 }

@@ -13,3 +13,19 @@ func TestKeyMarshalUnmarshal(t *testing.T) {
 		t.Fatal("Keys not equal!")
 	}
 }
+
+func TestKeyWithParent(t *testing.T) {
+	key, err := NewKey([]byte("1234567890")).SetParent([]byte("imtheparent"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	webKey := key.ToURLSafe()
+	k, err := FromURLSafe(webKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !k.Equal(key) {
+		t.Fatal("Keys not equal!")
+	}
+
+}

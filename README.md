@@ -40,9 +40,7 @@ ed25519 Sign and Verify signature
 	isValid, err := mcrypt.SignPubKey.Verify([]byte(msgToSign), signature)
 ```
 
-AES256 
-
-Keys must be 32 bytes
+AES256 (Keys must be 32 bytes)
 
 ```go
     
@@ -58,4 +56,12 @@ Generate URL safe Keys for database (byte keys)
 key := NewKey([]byte("01234567890123456789012345678901a34567890123456789012345678901234567890123456789"))
 	webKey := key.ToURLSafe()
 	k, err := FromURLSafe(webKey)
+```
+
+Validate Mailio Handshake (ed25519)
+
+```go
+	mcrypt := NewMCrypt("test-domain.json")
+
+	isValid, err := mcrypt.VerifyMailioHandshake(base64PublicKey, base64Signature, plainTextContract)
 ```
