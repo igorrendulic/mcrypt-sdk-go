@@ -90,3 +90,41 @@ func TestCurve25519FailDecryptNotRightPublicKey(t *testing.T) {
 	_, errDec := mcrypt3.EncPrivKey.Decrypt(mcrypt1.EncPubKey, encTest)
 	assert.EqualError(t, errDec, crypto.ErrDecryptionFailed.Error())
 }
+
+func TestEd25519SignMessage(t *testing.T) {
+
+	defer cleanupfiles("test-sign-1.json")
+	GenerateRandomKeys("test.io", "test-sign-1.json")
+
+	msgToSign := "message to sign"
+	mcrypt := NewMCrypt("test-sign-1.json")
+	signature, err := mcrypt.SignPrivKey.Sign([]byte(msgToSign))
+	if err != nil {
+		t.Fatal(err)
+	}
+	isValid, err := mcrypt.SignPubKey.Verify([]byte(msgToSign), signature)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, true, isValid)
+}
+
+func TestEd25519SignFailMessage(t *testing.T) {
+
+	defer cleanupfiles("test-sign-1.json", "test-sign-2.json")
+	GenerateRandomKeys("test.io", "test-sign-1.json")
+	GenerateRandomKeys("test.io", "test-sign-2.json")
+
+	msgToSign := "message to sign"
+	mcrypt1 := NewMCrypt("test-sign-1.json")
+	mcrypt2 := NewMCrypt("test-sign-2.json")
+	signature, err := mcrypt1.SignPrivKey.Sign([]byte(msgToSign))
+	if err != nil {
+		t.Fatal(err)
+	}
+	isValid, err := mcrypt2.SignPubKey.Verify([]byte(msgToSign), signature)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, false, isValid)
+}
