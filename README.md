@@ -4,6 +4,11 @@ Encryption and ID generation library for Mail.io.
 
 ## Usage: 
 
+Create new keys (curve25519 and ed25519 for signing)
+```go
+GenerateRandomKeys("mydomain.com", "keys.json")
+```
+
 Encrypt and decrypt with single key pair
 ```go
     mcrypt := NewMCrypt(testPath)
@@ -26,6 +31,15 @@ Encrypt/Descrypt for recipient with specific public key (PK exchange required pr
 	decrypted, err := mcrypt2.EncPrivKey.Decrypt(mcrypt1.EncPubKey, encTest)
 ```
 
+ed25519 Sign and Verify signature
+
+```go
+	mcrypt := NewMCrypt("test-sign-1.json")
+	signature, err := mcrypt.SignPrivKey.Sign([]byte(msgToSign))
+	
+	isValid, err := mcrypt.SignPubKey.Verify([]byte(msgToSign), signature)
+```
+
 AES256 
 
 Keys must be 32 bytes
@@ -36,4 +50,12 @@ Keys must be 32 bytes
 	msg := "this is plain message"
 	encrypted, err := crypto.Aes256Encrypt(key, []byte(msg))
 	decrypted, err := crypto.Aes256Decrypt(key, encrypted)
+```
+
+Generate URL safe Keys for database (byte keys)
+
+```go
+key := NewKey([]byte("01234567890123456789012345678901a34567890123456789012345678901234567890123456789"))
+	webKey := key.ToURLSafe()
+	k, err := FromURLSafe(webKey)
 ```
